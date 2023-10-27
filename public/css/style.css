@@ -1,0 +1,115 @@
+body{
+    font-family: 'Nunito', sans-serif;
+}
+
+nav a {
+    padding: 0.5rem;
+}
+
+li {
+    list-style-type: none;
+    border: 1px solid;
+    border-radius: 5px;
+    background: rgb(121, 118, 115);
+    padding: 5px;
+    margin: 5px;
+
+}
+
+li:hover {
+    background-color: #d56363;
+}
+
+form {
+    background: white;
+    border: 1px solid #dddddd;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #0000000f;
+}
+
+form div {
+    margin: 10px;
+}
+
+form input {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.2rem;
+    font-family: 'Nunito';
+}
+
+form label {
+    display: inherit;
+    font-size: 0.9rem;
+    padding-bottom: 3px;
+    color: #9d9d9d;
+}
+
+form button {
+    border: 1px solid #ddd;
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.form-error {
+    margin: 0;
+    font-size: 0.8rem;
+    color: red;
+}
+
+.edit-btn {
+    color: lightblue;
+    text-decoration: underline;
+    font-size: 0.8rem;
+}
+
+.delete-btn {
+    color: palevioletred;
+    text-decoration: underline;
+    font-size: 0.8rem;
+    background: none;
+    padding: 0;
+}
+
+.create-btn {
+    border: 1px solid #ddd;
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+/*start navbar style */
+.navbar .dropdown-toggle, .navbar .dropdown-menu a {
+    cursor: pointer;
+}
+
+.navbar .dropdown-item.active, .navbar .dropdown-item:active {
+    color: inherit;
+    text-decoration: none;
+    background-color: inherit;
+}
+
+.navbar .dropdown-item:focus, .navbar .dropdown-item:hover {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #f8f9fa;
+}
+
+@media (min-width: 767px) {
+    .navbar .dropdown-toggle:not(.nav-link)::after {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: .5em;
+        vertical-align: 0;
+        border-bottom: .3em solid transparent;
+        border-top: .3em solid transparent;
+        border-left: .3em solid;
+    }
+}
+/*end navbar style */

@@ -13,19 +13,10 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        // $categories =  DB::table('categories')->get();
-        // return view('categories.index', compact('categories'));
-        // --in index page :
-        //  @foreach ($categories as $category)
-        // <tr>
-        // <td>{{ $category->name }}</td>
-        // <td>{{ $category->parent_id }}</td>
-        // </tr>
-        //@endforeach
-
+        $categories = category::paginate(10);
 
         return view('categories.index', [
-            'categories'=> category::all()
+            'categories'=> $categories,
         ]);
     }
 
@@ -34,13 +25,8 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-
-            // $category = category::find(1);
-            // $child = $category->children;
         return view('categories.create',[
             'categories'=> category::all()->where('parent_id', 0)
-
-
         ]);
     }
 

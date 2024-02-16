@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\category;
 use App\Models\news;
 use App\Models\news_category;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -14,24 +15,11 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = news::with('categories')->get();
+        $news = news::with('categories')->paginate(10);
 
         return view('news.index', [
             'news'=> $news,
         ]);
-
-        // $cat_name =[];
-        // foreach($news as $single){
-        //     foreach($single->categories as $category){
-        //         $cat_name[$single->id] = $category->name;
-        //     }
-        // }
-
-
-        // return view('news.index', [
-        //     'news'=> news::all(),
-        //     'categories'=>$cat_name
-        // ]);
     }
 
     /**
@@ -39,9 +27,9 @@ class NewsController extends Controller
      */
     public function create()
     {
-        $category = category::all();
+        $categories = category::all()->where('parent_id', 0);
         return view('news.create',[
-            'categories'=>category::all()->where('parent_id', 0)
+            'categories'=> $categories,
         ]);
     }
 
@@ -50,21 +38,16 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'news-title'=>'required' ,
-        //     'news-content'=>'required',
-        //     'news-category'=>'required'
-        // ]);
+        $request->validate([
+            'news-title'=>'required' ,
+            'news-content'=>'required',
+            'news-category'=>'required'
+        ]);
 
-        $image = $request->file('photo')->getClientOriginalName() ;
+        $image = $request->file('photo')->getClientOriginalName().Carbon::now() ;
         $path = $request->file('photo')->storeAs('images', $image,'images') ;
 
-
-
-
-
         $news = new news();
-
 
         $news->title = strip_tags($request->input('news-title')) ;
         $news->content = htmlentities($request->input('news-content')) ;
@@ -90,17 +73,21 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $news)
+    public function edit($id)
     {
+        $categories = category::all()->where('parent_id', 0);
+        $news = news::where('id', $id)->with('categories')->first();
+
         return view('news.edit', [
-            'news'=> news::findOrFail($news)
+            'categories'=> $categories,
+            'news'=> $news,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $news)
+    public function update(Request $request,  $news)
     {
         $request->validate([
             'news-title'=>'required' ,
@@ -109,10 +96,27 @@ class NewsController extends Controller
 
         $to_update = news::findOrFail($news);
 
+        if($request->file('photo')) {
+
+            $old_image = $to_update->image ;
+            $old_image_path = public_path('app/public/' . $old_image);
+            if (file_exists($old_image_path)) {
+                unlink($old_image_path);
+            }
+
+            $image = $request->file('photo')->getClientOriginalName().Carbon::now() ;
+            $path = $request->file('photo')->storeAs('images', $image,'images') ;
+        }
         $to_update->title = strip_tags($request->input('news-title')) ;
         $to_update->content = strip_tags($request->input('news-content')) ;
+        $to_update->image = $path ;
 
         $to_update->save();
+
+        $category_id = $request->input('news-category');
+        if ($category_id) {
+            $to_update->categories()->sync($category_id);
+        }
 
         return redirect()->route('news.index', $news);
     }

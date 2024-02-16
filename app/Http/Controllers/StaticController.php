@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\DB;
 class StaticController extends Controller
 {
     public function index () {
+        $news = news::paginate(6);
+        $categories = category::all()->where('parent_id', 0);
         return view('welcome',[
-            'categories'=> category::all()->where('parent_id', 0)
+            'news'=>$news,
+            'categories'=>$categories
         ]);
     }
     public function logout () {
@@ -35,7 +38,7 @@ class StaticController extends Controller
         return view('guset.guset',[
             'news'=>$news,
             'categories'=> category::all()->where('parent_id', 0),
-            'category_name'=> $category_name->name.' news'
+            'category_name'=> $category_name->name,
         ]) ;
 
 

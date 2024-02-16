@@ -11,6 +11,13 @@ class news extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'content',
+        'image',
+
+    ];
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(category::class,'news_categories', 'news_id', 'category_id');
